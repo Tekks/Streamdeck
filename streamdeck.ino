@@ -43,8 +43,9 @@ HX8347_kbv tft;
 uint16_t g_identifier;
 void setup(void) {
   Serial.begin(9600);
+  Serial.setTimeout(50);
   tft.begin(g_identifier);
-  g_identifier = tft.readID(); //
+  g_identifier = tft.readID();
   Serial.print("ID = 0x");
   Serial.println(g_identifier, HEX);
   if (g_identifier == 0x00D3) g_identifier = 0x9486;
@@ -55,11 +56,12 @@ void setup(void) {
 }
 
 void loop() {
+  write_Jinput();
   if (tss.touched()) {
     TS_Point p = tss.getPoint();
     p.x = map(p.x, 320, 3850, 0, 480);
     p.y = map(p.y, 3800 , 305, 0, 320);
-    //################## REIHE 1 ##################
+    //################## LINE 1 ##################
     if (p.x > 20 && p.x < 90 && p.y > 80 && p.y < 150) {
       Serial.println(1);
       if (t1) {
@@ -101,7 +103,7 @@ void loop() {
     }
 
 
-    //################## REIHE 2 ##################
+    //################## LINE 2 ##################
     if (p.x > 20 && p.x < 90 && p.y > 165 && p.y < 235) {
       Serial.println(6);
       if (t6) {
@@ -141,7 +143,7 @@ void loop() {
       Serial.println(10);
     }
 
-    //################## REIHE 3 ##################
+    //################## LINE 3 ##################
 
 
     if (p.x > 20 && p.x < 90 && p.y > 245 && p.y < 315) {
@@ -186,11 +188,6 @@ void initial() {
   tft.fillScreen(WHITE);
   tft.fillScreen(BLACK);
   tft.setTextColor(WHITE);
-  tft.setTextSize(2);
-  tft.setCursor(5, 5);
-  tft.println("TFT Touch Systems");
-  tft.setCursor(5, 25);
-  tft.println("by Tekks");
   draw_re(10, 60, GREEN, "DISC", "Mic", "ON");
   draw_re(70, 60, GREEN, "TS", "Mic", "ON");
   draw_re(130, 60);
@@ -235,7 +232,49 @@ void draw_re(int x, int y, uint16_t color, String txt1, String txt2, String txt3
   tft.println(txt3);
 }
 
+void write_Jinput(){
+  String JString = Serial.readString();
+  tft.setTextSize(1);
+  tft.setTextColor(WHITE);
+  int x_desc = 5;
+  int y_desc = 5;
+  String count_items = getValue(JString, ';', 0);
+    
+    
+    
+  for (int i = 1;i < count_items.toInt()*2;i = i + 2){
+    String string_desc = getValue(JString, ';', i);
+    String string_item = getValue(JString, ';', i+1);
+    Serial.println(string_desc);
+    Serial.println(string_item);
+    tft.fillRect(x_desc+50, y_desc, 50, 7, BLACK); //x,y,l,h
+    tft.setCursor(x_desc, y_desc);
+    tft.println(string_desc);
+    tft.setCursor(x_desc + 50, y_desc); 
+    tft.println(string_item); 
+    Serial.println(y_desc);  
+    y_desc > 30 ? x_desc = x_desc + 150 : x_desc;
+    y_desc > 30 ? y_desc = 5 : y_desc = y_desc + 10;
+    Serial.println(y_desc);     
+  }
+  JString = "";
+}
 
+
+String getValue(String data, char separator, int index) {
+    int found = 0;
+    int strIndex[] = { 0, -1 };
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i+1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
 
 
 
