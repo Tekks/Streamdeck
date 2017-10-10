@@ -126,7 +126,7 @@ public class Arduino_Interface {
 								} catch (Exception e) {
 								}
 								PrintWriter output = new PrintWriter(chosenPort.getOutputStream());
-								while (true) {									
+								while (chosenPort != null) {									
 									String cpu = Double.toString((int) (processor.getSystemCpuLoad() * 100 * 100) / 100.0);
 									String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
 									
@@ -134,7 +134,11 @@ public class Arduino_Interface {
 									long totalMem = si.getHardware().getMemory().getTotal();
 									String memory =  (totalMem - availMem) * 100/ (int) Math.pow(1024, 3)/100.0 + " / "
 												+ totalMem *100 / (int) Math.pow(1024, 3)/100.0;
-									String finalstring = timestamp + ';' + cpu + ';' + memory;
+									String finalstring = "3;" + 
+												"TIME:;" + timestamp + ';' +
+												"CPU:;" + cpu + ';' + 
+												"MEM:;" + memory;
+									System.out.println(finalstring);
 									output.print(finalstring);
 									output.flush();
 									try {
