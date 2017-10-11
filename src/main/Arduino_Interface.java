@@ -23,10 +23,9 @@ import java.net.ServerSocket;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.swing.*;
+import javax.swing.event.HyperlinkListener;
 import com.fazecast.jSerialComm.SerialPort;
-
 import oshi.SystemInfo;
 import oshi.hardware.CentralProcessor;
 
@@ -47,7 +46,6 @@ public class Arduino_Interface {
 	public static void main(String[] args) {
 		checkIfRunning();
 		try {
-			// UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -99,11 +97,10 @@ public class Arduino_Interface {
 		window.add(topPanel, BorderLayout.NORTH);
 
 		// begin transfer
-		
-		SystemInfo si= new SystemInfo();
+
+		SystemInfo si = new SystemInfo();
 		CentralProcessor processor = si.getHardware().getProcessor();
-		
-		
+
 		connectButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -126,21 +123,21 @@ public class Arduino_Interface {
 								} catch (Exception e) {
 								}
 								PrintWriter output = new PrintWriter(chosenPort.getOutputStream());
-								while (chosenPort != null) {									
-									String cpu = Double.toString((int) (processor.getSystemCpuLoad() * 100 * 100) / 100.0);
+								while (chosenPort != null) {
+
+									String cpu = Double
+											.toString((int) (processor.getSystemCpuLoad() * 100 * 100) / 100.0);
 									String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
-									
 									long availMem = si.getHardware().getMemory().getAvailable();
 									long totalMem = si.getHardware().getMemory().getTotal();
-									String memory =  (totalMem - availMem) * 100/ (int) Math.pow(1024, 3)/100.0 + " / "
-												+ totalMem *100 / (int) Math.pow(1024, 3)/100.0;
-									String finalstring = "3;" + 
-												"TIME:;" + timestamp + ';' +
-												"CPU:;" + cpu + ';' + 
-												"MEM:;" + memory;
+									String memory = (totalMem - availMem) * 100 / (int) Math.pow(1024, 3) / 100.0
+											+ " / " + totalMem * 100 / (int) Math.pow(1024, 3) / 100.0;
+									String finalstring = "3;" + "TIME:;" + timestamp + ';' + "CPU:;" + cpu + ';'
+											+ "MEM:;" + memory;
 									System.out.println(finalstring);
 									output.print(finalstring);
 									output.flush();
+									// output.close();
 									try {
 										Thread.sleep(1000);
 									} catch (Exception e) {
@@ -148,6 +145,7 @@ public class Arduino_Interface {
 								}
 							}
 						};
+						thread.setPriority(Thread.MAX_PRIORITY);
 						thread.start();
 					}
 				} else {
@@ -209,9 +207,21 @@ public class Arduino_Interface {
 
 		aboutItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null,
-						"Developed by Tekks\n Licensed under the Apache License, " + "Version 2.0", "About",
-						JOptionPane.INFORMATION_MESSAGE);
+				JLabel label = new JLabel();
+				Font font = label.getFont();
+				StringBuffer style = new StringBuffer("font-family:" + font.getFamily() + ";");
+				style.append("font-weight:" + (font.isBold() ? "bold" : "normal") + ";");
+				style.append("font-size:" + font.getSize() + "pt;");
+				JEditorPane ep = new JEditorPane("text/html", "<html><body style=\"" + style + "\">" //
+						+ "Developed by Tekks<br>" + "Licensed under the Apache License, Version 2.0<br>"
+						+ "visit <a href=\"http://tekks.de/\">Tekks.de</a>  for more Information" //
+						+ "</body></html>");
+				HyperlinkListener hyperlinkListener = new ExtHyperLinkListener(ep);
+				ep.addHyperlinkListener(hyperlinkListener);
+				ep.setEditable(false);
+				ep.setBackground(label.getBackground());
+				JOptionPane.showMessageDialog(null, ep, "Arduino Interface | About", JOptionPane.INFORMATION_MESSAGE,
+						null);
 			}
 		});
 
