@@ -46,8 +46,6 @@ void setup(void) {
   Serial.setTimeout(50);
   tft.begin(g_identifier);
   g_identifier = tft.readID();
-  Serial.print("ID = 0x");
-  Serial.println(g_identifier, HEX);
   if (g_identifier == 0x00D3) g_identifier = 0x9486;
   if (g_identifier == 0xFFFF) g_identifier = 0x9341;
   initial();
@@ -63,7 +61,6 @@ void loop() {
     p.y = map(p.y, 3800 , 305, 0, 320);
     //################## LINE 1 ##################
     if (p.x > 20 && p.x < 90 && p.y > 80 && p.y < 150) {
-      Serial.println(1);
       if (t1) {
         draw_re(10, 60, GREEN, "DISC", "Mic", "ON");
         draw_re(10, 120, GREEN, "DISC", "Speaker", "ON");
@@ -82,7 +79,6 @@ void loop() {
       Keyboard.write(KEY_F13);
     }
     if (p.x > 115 && p.x < 180 && p.y > 80 && p.y < 150) {
-      Serial.println(2);
       if (t2) {
         draw_re(70, 60, GREEN, "TS", "Mic", "ON");;
         t2 = false;
@@ -93,19 +89,15 @@ void loop() {
       Keyboard.write(KEY_F15);
     }
     if (p.x > 200 && p.x < 275 && p.y > 80 && p.y < 150) {
-      Serial.println(3);
     }
     if (p.x > 290 && p.x < 365 && p.y > 80 && p.y < 150) {
-      Serial.println(4);
     }
     if (p.x > 385 && p.x < 455 && p.y > 80 && p.y < 150) {
-      Serial.println(5);
     }
 
 
     //################## LINE 2 ##################
     if (p.x > 20 && p.x < 90 && p.y > 165 && p.y < 235) {
-      Serial.println(6);
       if (t6) {
         if (t1h == false) {
           draw_re(10, 60, GREEN, "DISC", "Mic", "ON");
@@ -122,7 +114,6 @@ void loop() {
       Keyboard.write(KEY_F14);
     }
     if (p.x > 115 && p.x < 180 && p.y > 165 && p.y < 235) {
-      Serial.println(7);
       if (t7) {
         draw_re(70, 120, GREEN, "TS", "Speaker", "ON");
         t7 = false;
@@ -133,21 +124,16 @@ void loop() {
       Keyboard.write(KEY_F16);
     }
     if (p.x > 200 && p.x < 275 && p.y > 165 && p.y < 235) {
-      Serial.println(8);
-
     }
     if (p.x > 290 && p.x < 365 && p.y > 165 && p.y < 235) {
-      Serial.println(9);
     }
     if (p.x > 385 && p.x < 455 && p.y > 165 && p.y < 235) {
-      Serial.println(10);
     }
 
     //################## LINE 3 ##################
 
 
     if (p.x > 20 && p.x < 90 && p.y > 245 && p.y < 315) {
-      Serial.println(11);
       if (t11) {
         draw_re(10, 180, CYAN, "OBS", "Mic", "ON");
         t11 = false;
@@ -158,7 +144,6 @@ void loop() {
       Keyboard.write(KEY_F22);
     }
     if (p.x > 115 && p.x < 180 && p.y > 245 && p.y < 315) {
-      Serial.println(12);
       if (t12) {
         draw_re(70, 180, CYAN, "OBS", "Speaker", "ON");
         t12 = false;
@@ -169,18 +154,14 @@ void loop() {
       Keyboard.write(KEY_F21);
     }
     if (p.x > 200 && p.x < 275 && p.y > 245 && p.y < 315) {
-      Serial.println(13);
     }
     if (p.x > 290 && p.x < 365 && p.y > 245 && p.y < 315) {
-      Serial.println(14);
     }
     if (p.x > 385 && p.x < 455 && p.y > 245 && p.y < 315) {
-      Serial.println(15);
     }
     delay(500);
   }
 }
-
 
 void initial() {
   tft.setRotation(3);
@@ -188,6 +169,7 @@ void initial() {
   tft.fillScreen(WHITE);
   tft.fillScreen(BLACK);
   tft.setTextColor(WHITE);
+  
   draw_re(10, 60, GREEN, "DISC", "Mic", "ON");
   draw_re(70, 60, GREEN, "TS", "Mic", "ON");
   draw_re(130, 60);
@@ -240,32 +222,24 @@ void write_Jinput(){
   int y_desc = 5;
   String count_items = getValue(JString, ';', 0);
     
-    
-    
   for (int i = 1;i < count_items.toInt()*2;i = i + 2){
     String string_desc = getValue(JString, ';', i);
     String string_item = getValue(JString, ';', i+1);
-    Serial.println(string_desc);
-    Serial.println(string_item);
-    tft.fillRect(x_desc+50, y_desc, 50, 7, BLACK); //x,y,l,h
+    tft.fillRect(x_desc+50, y_desc, 100, 7, BLACK); //x,y,l,h
     tft.setCursor(x_desc, y_desc);
     tft.println(string_desc);
     tft.setCursor(x_desc + 50, y_desc); 
     tft.println(string_item); 
-    Serial.println(y_desc);  
     y_desc > 30 ? x_desc = x_desc + 150 : x_desc;
-    y_desc > 30 ? y_desc = 5 : y_desc = y_desc + 10;
-    Serial.println(y_desc);     
+    y_desc > 30 ? y_desc = 5 : y_desc = y_desc + 10;  
   }
   JString = "";
 }
-
 
 String getValue(String data, char separator, int index) {
     int found = 0;
     int strIndex[] = { 0, -1 };
     int maxIndex = data.length() - 1;
-
     for (int i = 0; i <= maxIndex && found <= index; i++) {
         if (data.charAt(i) == separator || i == maxIndex) {
             found++;
@@ -275,11 +249,3 @@ String getValue(String data, char separator, int index) {
     }
     return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
-
-
-
-
-
-
-
-
