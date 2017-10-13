@@ -15,12 +15,12 @@ class ExtHyperLinkListener implements HyperlinkListener {
 		this.editorPane = editorPane;
 	}
 
-	public void hyperlinkUpdate(HyperlinkEvent e) {
-		if (e.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
+	public void hyperlinkUpdate(HyperlinkEvent hypev) {
+		if (hypev.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED))
 			try {
-				Desktop.getDesktop().browse(new URI(e.getURL().toString()));
-			} catch (IOException | URISyntaxException err) {
-				err.printStackTrace();
+				Desktop.getDesktop().browse(new URI(hypev.getURL().toString()));
+			} catch (IOException | URISyntaxException e) {
+				e.printStackTrace();
 			}
 	}
 }
