@@ -6,11 +6,13 @@ inspired by Elgato
 
 ### Used Libarys
 * [Adafruit GFX graphics core library](https://github.com/adafruit/Adafruit-GFX-Library)
+
 ===============================
 
 ### Used Hardware
 * ARDUINO LEONARDO ~ 18€
 * 2.8 inch TFT Resistive Arduino Touch LCD Shield 320×240 ~ 19€
+
 ===============================
 
 ### Result
