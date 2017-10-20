@@ -17,4 +17,4 @@ inspired by Elgato
 
 ### Result
 
-<img align="left" src="https://i.imgur.com/cA0bnzR.jpg" height="40%" width="40%">
+<img align="left" src="https://i.imgur.com/imVZpZX.jpg" height="40%" width="40%">
