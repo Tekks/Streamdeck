@@ -44,7 +44,7 @@ public class Arduino_Interface {
 	static String portListselect;
 	static TrayIcon trayIcon;
 	static JFrame window;
-	private static final int PORT = 9999;
+	private static final int PORT = 1258;
 
 	public static void main(String[] args) {
 		checkIfRunning();
@@ -67,6 +67,7 @@ public class Arduino_Interface {
 		try {
 			new ServerSocket(PORT, 0, InetAddress.getByAddress(new byte[] { 127, 0, 0, 1 }));
 		} catch (Exception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Another Instance is Running", "Warning", JOptionPane.WARNING_MESSAGE);
 			System.exit(1);
 		}
